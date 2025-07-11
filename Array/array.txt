@@ -1,0 +1,16 @@
+class: a code template of creating an Object
+__init__: an instance method that initializes a newly created object by setting initial values to its attributes
+dunder methods (__ __): defining a specific behavior of a built-in operation or functionality
+
+Array: A group of related variables stored in a contiguous portion of computer memory
+- Store & Retrieve in O(1) time --> computer's main memory performs as random access memory
+- List, Tuple, String classes are using array --> 'index' to access an individual item in the sequence
+- Object reference of an array supports constant-time access to a list or tuple element based on its index
+- Shallow copy: reference to the existing element (temp & primes --> change in temp does not change the shared items)
+- Deep copy: new list with new element
+- data = [0] * 8 --> all 8 cells of the list reference the same object
+
+!!!Amortization
+- average running time of operations over a sequence of operations, rather than analyzing each operation individually in the worst-case
+- most operations are cheap, but only a few operations that happen rarely are expensive
+e.g. dynamic array -> array doubles in size and all existing elements are copied to the new array (takes O(n)), but this happens rarely. Thus, most insertions are just O(1)

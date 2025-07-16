@@ -1,0 +1,38 @@
+Euler Tour Traversal, O(n)
+- More general framework for implementing tree traversal
+- Tracing around the edges of the tree -> visiting each edge twice (onece down, once up)
+- Pre visit (when the walk passes immediately left of the node) + Post visit (when the walk proceeds upward, passes the right of the node)
+
+eulertour(T, p):
+  previsit(p)
+  for each child c in T.children(p):
+    eulertour(T, c)
+  postvisit(p)
+
+* Template Method Pattern
+- reusable and adaptable
+- hook: auxiliary function called by primary algorithm
+
+* preorder: root -> left -> right  / postorder: left -> right -> root  / inorder: left -> root -> right
+
+[Example]
+    A
+   / \
+  B   C
+ / \
+D   E
+
+1. First time you reach B, you’re approaching it from its parent (A) — you’re on the left side → Preorder: visit B
+2. Then you walk to its left child (D), then return — you now pass underneath B → Inorder: visit B
+3. Finally, after visiting right child (E), you return and pass by the right side of B as you walk back up to A → Postorder: visit B
+
+✅ Left side of the node — this is like arriving at the castle
+  → This is when we say Preorder visit
+✅ Below the node (coming up from the left) — like walking in front of the castle’s gate
+  → This is when we say Inorder visit
+✅ Right side of the node — this is like leaving the castle
+  → This is when we say Postorder visit
+
+•	Preorder: take first (left) visits → A B D E C
+•	Inorder: take middle (below) visits → D B E A C
+•	Postorder: take right visits → D E B C A

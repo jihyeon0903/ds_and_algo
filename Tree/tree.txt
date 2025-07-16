@@ -1,0 +1,58 @@
+Tree is a set of nodes storing elements such that the nodes have a parent-child relationship
+-> nonlinear / hierarchical data structure
+
+1. external nodes have no children (leaf nodes)
+2. internal nodes (with children nodes)
+3. depth, edges from root to node. O(dp+1)
+  def depth(self, p):
+    if self.is_root(p):
+      return 0
+    else:
+      return 1 + self.depth(self.parent())
+4. height, edges from node to deepest leaf
+  def height(self, p):
+    if self.is_leaf(p):
+      return 0
+    else:
+      return 1 + max(self.height(c) for c in self.children(p))
+
+Binary tree -> ordered tree / every node has at most two children / proper if every internal node has exactly two children
+- level d has at most 2^d nodes
+- nE = nI + 1 in nonempty proper binary tree
+
+Abstract Base Class -> greater code reuse:
+- template for other classes / common interface & abstract methods
+- cannot be instantiated
+
+Concrete Class:
+- inherited from ABC or other concrete classes
+- full and complete Class
+- can be instantiated
+
+e.g.
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+  @abstractmethod
+  def speak(self):
+      pass
+
+a = Animal()  ❌ TypeError: Can't instantiate abstract class
+
+class Dog(Animal):
+  def speak(self):
+      return "Woof"
+
+d = Dog()
+print(d.speak())  ✅ "Woof"
+
+
+When tree is an ideal solution
+1. Data has hierarchical relationships
+2. Fast search with sorted data (B-tree) -> e.g. database indexes
+3. Recursive or nested problem
+
+In BST
+- All values in the left subtree must be smaller than the node's value + All values in the right subtree must be larger than the node's value
+! search: O(logn) -> search space cut in half at every level
+! insertion & deletion: O(logn) -> search takes O(logn) + insertion or deletion takes O(1)

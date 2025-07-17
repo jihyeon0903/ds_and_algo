@@ -1,0 +1,59 @@
+Hash Funtion
+- map each key k to an integer in the range [0, N-1]
+- h(k) is used as an index into the bucket array
+- hash code (maps k to an integer -> independent of the table size) + compression function (maps hash code to an integer within the range of [0, N-1])
+
+[Hash Code]
+- bit represenation
+  e.g.
+    b = b'abcd'
+    hash_val = int.from_bytes(b, 'big')
+    print(hash_val)  # Output: 1633837924
+    -> Not good for common groups of strings since it generates lots of collisions (['stop', 'tops', 'pots', 'spot] ...)
+- polynomial
+  -> For a string s with characters s[0], s[1], ..., s[n-1], and a fixed integer base a:
+      h(s) = s[0] x a^(n-1) + s[1] x a^(n-2) + ... + s[n-2] x a + s[n-1]
+
+      •	Each s[i] is the integer representation of the character.
+      •	a is a chosen base, commonly 31, 33, or 37.
+  -> Collisions can still happen, especially with small mod values or poor base choice.
+- cyclic-shift
+  def hash_code(s):
+    mask = (1 << 32) - 1      -> 32-bit unsigned integer space
+    h = 0
+    for character in s:
+      h = (h << 5 & mask) | (h >> 27)      -> left rotate by 5 bits or right if overflowed
+      h += ord(character)      -> add in value of next character
+    return h
+
+* hash(x)
+-> only immutable data types (int, float, str, tuple, frozenset) are hashable in Python (a particular object's hash code remains constant during that object's lifespan)
+-> __hash__ must be consistent (if x == y then hash(x) == hash(y), e.g. 5 == 5.0 therefore hash(5) == hash(5.0))
+
+[Compression Function]
+- division method, i % N  -> if N isn't prime, the patterns in the distribution of hash codes will be repeated, thereby causing collisions
+- MAD method [(ai+b) % p] % N  -> N = size of bucket array, p = prime number larger than N, a & b = random integer in [0, p-1], less collisions
+
+Collision-Handling Schemes
+- separate chaining
+  -> each bucket stores its own secondary container
+  -> operations on individual bucket: worst-case O(N), with a good hash function O([n/N])
+  -> load factor λ = n/N (n = # of items, N = bucket array capacity), should be less than 1
+  -> requires the use of an auxiliary data structure (list), large space complexity
+- open addressing
+  1. linear probing
+    -> [insertion] probe A[(j+i) % N] until it finds an empty bucket!
+    -> [deletion] replace deleted items with available marker object
+  2. quadratic probing
+    -> A[(h(k) + f(i)) % N], f(i) = i^2
+    -> avoid clusturing in linear probing (but can have secondary clustering if N is not prime and A is more than half-filled)
+  3. double hashing
+    -> if A[h(k)] is already occupied, try A[(h(k) + f(i)) % N], f(i) = i x h'(k)
+    -> secondary hash function h'(k) = q - (k % q), q (primary number) < N
+
+* Load Factor: λ = n/N  -> should be < 0.9 in separate chaining and < 0.5 in open addressing to avoid collisions
+* Rehashing: when insertion causes λ goes above the threshold, resize the table and reinsert all objects  -> scatter the items throughout the new bucket array
+* Efficiency:
+  __getitem__, __setitem__, __delitem__ : expected: O(1) / worst-case O(n)
+  __len__ : O(1)
+  __iter__ : O(n)
